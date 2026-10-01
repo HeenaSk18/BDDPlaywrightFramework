@@ -13,3 +13,14 @@ coverage/
 logs/
 *.log
 README.md
+node_modules
+allure-results
+allure-report
+test-results
+pw-browsers
+
+node_modules
+allure-results
+allure-report
+test-results
+pw-browsers
