@@ -24,7 +24,6 @@ pipeline {
 
     stage('Install Dependencies') {
       steps {
-        bat 'node -v && npm -v'
         bat 'npm ci'
       }
     }
@@ -66,12 +65,6 @@ pipeline {
     always {
       allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
       archiveArtifacts artifacts: 'test-results/**', allowEmptyArchive: true
-    }
-    success {
-      echo 'Build successful: all tests passed.'
-    }
-    unstable {
-      echo 'Build finished, but some tests failed. Check the Allure report.'
     }
   }
 }

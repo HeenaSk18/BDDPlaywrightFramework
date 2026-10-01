@@ -26,6 +26,12 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: [
-    { name: 'chrome', use: { ...devices['Desktop Chrome'], channel: 'chrome' } },
-  ],
+  {
+    name: 'chrome',
+    use: {
+      ...devices['Desktop Chrome'],
+      ...(process.env.CI ? {} : { channel: 'chrome' }),
+    },
+  },
+],
 });
