@@ -1,13 +1,10 @@
 pipeline {
   agent any
 
-  tools {
-    nodejs 'NodeJS'
-  }
-
   environment {
     CI = 'true'
     PLAYWRIGHT_BROWSERS_PATH = "${WORKSPACE}\\pw-browsers"
+    PATH = "C:\\Program Files\\nodejs;${env.PATH}"
   }
 
   options {
@@ -18,7 +15,14 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/HeenaSk18/BDDPlaywrightFramework.git'
+        checkout scm
+      }
+    }
+
+    stage('Check Tools') {
+      steps {
+        bat 'node -v'
+        bat 'npm -v'
       }
     }
 
