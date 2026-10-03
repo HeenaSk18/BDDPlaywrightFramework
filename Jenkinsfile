@@ -1,5 +1,6 @@
 pipeline {
-  agent any
+  // Use 'any' if Jenkins runs only on your Windows machine
+  agent { label 'windows' }
 
   environment {
     CI = 'true'
@@ -10,11 +11,14 @@ pipeline {
   options {
     timestamps()
     timeout(time: 30, unit: 'MINUTES')
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    disableConcurrentBuilds()
   }
 
   stages {
     stage('Checkout') {
       steps {
+        // Requires "Pipeline script from SCM" in the job config
         checkout scm
       }
     }
@@ -52,6 +56,8 @@ pipeline {
         bat '''
           if exist allure-results rmdir /s /q allure-results
           if exist allure-report rmdir /s /q allure-report
+          if exist test-results rmdir /s /q test-results
+          if exist playwright-report rmdir /s /q playwright-report
         '''
       }
     }
@@ -67,8 +73,21 @@ pipeline {
 
   post {
     always {
-      allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
-      archiveArtifacts artifacts: 'test-results/**', allowEmptyArchive: true
+      // Archive first so artifacts are saved even if Allure fails
+      archiveArtifacts artifacts: 'test-results/**, playwright-report/**', allowEmptyArchive: true
+
+      script {
+        try {
+          allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+        } catch (err) {
+          echo "Allure report step failed: ${err.getMessage()}"
+        }
+      }
+    }
+    cleanup {
+      // Optional: remove downloaded browsers/node_modules to save disk space
+      // deleteDir()
+      echo 'Pipeline finished.'
     }
   }
 }
