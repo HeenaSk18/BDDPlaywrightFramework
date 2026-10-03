@@ -1,6 +1,5 @@
 pipeline {
-  // Use 'any' if Jenkins runs only on your Windows machine
-agent any
+  agent any
 
   environment {
     CI = 'true'
@@ -13,6 +12,7 @@ agent any
     timeout(time: 30, unit: 'MINUTES')
     buildDiscarder(logRotator(numToKeepStr: '20'))
     disableConcurrentBuilds()
+    skipDefaultCheckout(true)   // checkout happens once, in the Checkout stage
   }
 
   stages {
@@ -79,8 +79,9 @@ agent any
       script {
         try {
           allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
-        } catch (err) {
-          echo "Allure report step failed: ${err.getMessage()}"
+        } catch (Throwable err) {
+          // Throwable is required: a missing plugin throws NoSuchMethodError (an Error, not an Exception)
+          echo "Allure report step skipped: ${err.getMessage()}"
         }
       }
     }
