@@ -149,6 +149,10 @@ npx playwright test --project=chrome
 npx bddgen
 ```
 
+<img width="1901" height="746" alt="image" src="https://github.com/user-attachments/assets/4505f8db-e504-4c7f-96c8-2d8e4c61216e" />
+<img width="1915" height="966" alt="image" src="https://github.com/user-attachments/assets/965e54ca-af61-4b92-9393-a0e82ec77f74" />
+
+
 ## Author
 
 This project is a sample BDD Playwright framework for automated web testing.
