@@ -1,6 +1,6 @@
 pipeline {
   // Use 'any' if Jenkins runs only on your Windows machine
-  agent any
+agent any
 
   environment {
     CI = 'true'
